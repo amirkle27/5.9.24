@@ -1,0 +1,13 @@
+1. SELECT * FROM eurovision_winners (4)
+
+2. SELECT count (*) FROM eurovision_winners WHERE country = host_country (6)
+
+3. SELECT country, year FROM eurovision_winners WHERE country = 'Israel' (1978, 1979, 1998, 2018)
+
+4. SELECT sn. song_name, sls. song_length_seconds
+FROM eurovision_winners sn
+JOIN song_details sls on sn.year=sls.year
+WHERE sls .song_length_seconds = (SELECT MIN (song_length_seconds) FROM song_details)
+
+5. SELECT * FROM eurovision_winners
+JOIN song_details on eurovision_winners.year=song_details.year
