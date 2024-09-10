@@ -1,13 +1,133 @@
-1. SELECT * FROM eurovision_winners (4)
+1. SELECT * 
+FROM eurovision_winners 
 
-2. SELECT count (*) FROM eurovision_winners WHERE country = host_country (6)
+2. SELECT count (*) 
+FROM eurovision_winners 
+WHERE country = host_country 
 
-3. SELECT country, year FROM eurovision_winners WHERE country = 'Israel' (1978, 1979, 1998, 2018)
+3. SELECT country, year 
+FROM eurovision_winners 
+WHERE country = 'Israel' 
 
-4. SELECT sn. song_name, sls. song_length_seconds
-FROM eurovision_winners sn
-JOIN song_details sls on sn.year=sls.year
-WHERE sls .song_length_seconds = (SELECT MIN (song_length_seconds) FROM song_details)
+4. SELECT ew.song_name, sd.song_length_seconds
+FROM eurovision_winners ew
+JOIN song_details sd
+ON ew.year=sd.year
+WHERE sd.song_length_seconds = (
+SELECT MIN (song_length_seconds) 
+FROM song_details)
 
-5. SELECT * FROM eurovision_winners
-JOIN song_details on eurovision_winners.year=song_details.year
+5. SELECT * 
+FROM eurovision_winners
+JOIN song_details 
+ON eurovision_winners.year=song_details.year
+
+6. SELECT ew.song_name, sd.solo_performance
+FROM eurovision_winners ew
+JOIN song_details sd
+ON ew.year=sd.year
+WHERE solo_performance=1
+
+7. SELECT COUNT (*)
+FROM song_details
+WHERE language = 'English'
+
+8. SELECT avg (song_length_seconds)
+FROM song_details
+
+9. SELECT year
+FROM eurovision_winners
+WHERE song_name = 'Hallelujah'
+
+10. SELECT min(ew.year), sd.solo_performance, ew.winner
+FROM eurovision_winners ew
+JOIN song_details sd
+ON ew.year=sd.year
+WHERE solo_performance = 0
+
+11. SELECT max(sd.song_length_seconds), ew.song_name, ew.year
+FROM eurovision_winners ew
+JOIN song_details sd
+ON ew.year=sd.year
+
+		OR
+
+SELECT sd.song_length_seconds, ew.song_name, ew.year
+FROM eurovision_winners ew
+JOIN song_details sd
+ON ew.year=sd.year
+WHERE sd.song_length_seconds = (
+	SELECT max(song_length_seconds)
+	FROM song_details)
+
+12. SELECT ew.country, count(ew.country) AS "No. of Winnings"
+FROM eurovision_winners ew
+GROUP BY ew.country
+HAVING "No. of Winnings" = (SELECT max("No. of Winnings") FROM (
+SELECT ew.country, count(ew.country) "No. of Winnings"
+FROM eurovision_winners ew
+GROUP BY ew.country));
+
+13 SELECT ew.country, count(ew.country) AS "No. of Winnings"
+FROM eurovision_winners ew
+GROUP BY ew.country
+ORDER BY "No. of Winnings" DESC
+
+14. SELECT ew.song_name, sd.language
+FROM eurovision_winners ew
+JOIN song_details sd
+ON ew.year=sd.year
+WHERE language = "French"
+
+15. SELECT country, MAX(year), MIN(year)
+FROM eurovision_winners ew
+WHERE country = "Israel"
+
+16. SELECT ew.song_name, ew.country, ew.year, sd.song_length_seconds
+FROM eurovision_winners ew
+JOIN song_details sd
+On ew.year = sd.year
+ORDER BY song_length_seconds DESC
+
+17. SELECT ew.country,ew.song_name,sd.song_length_seconds
+FROM song_details sd
+JOIN eurovision_winners ew
+on sd.'Year' = ew.'Year'
+WHERE sd.song_length_seconds>(
+	SELECT avg(song_length_seconds) avg
+	FROM song_details)
+
+18. SELECT ew.song_name,min(sd.song_length_seconds), sd.solo_performance
+FROM song_details sd
+JOIN eurovision_winners ew
+on sd.'Year' = ew.'Year'
+WHERE solo_performance=1
+
+OR
+
+SELECT ew.song_name,sd.song_length_seconds, sd.solo_performance
+FROM song_details sd
+JOIN eurovision_winners ew
+on sd.'Year' = ew.'Year'
+WHERE solo_performance=1
+ORDER BY song_length_seconds
+LIMIT 1
+
+19. SELECT ew.country,ew.song_name,AVG(sd.song_length_seconds),COUNT(*) as 'No. of Songs'
+FROM song_details sd
+JOIN eurovision_winners ew
+on sd.'Year' = ew.'Year'
+GROUP BY country
+
+20. SELECT COUNT(*) as 'Not in English'
+FROM song_details sd
+WHERE NOT language = 'English'
+
+21. SELECT COUNT(DISTINCT(genre))
+FROM song_details
+
+22. SELECT country, winner, year
+FROM eurovision_winners
+WHERE country = 'Israel'
+ORDER BY year DESC
+LIMIT 1
