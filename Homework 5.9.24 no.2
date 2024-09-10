@@ -1,0 +1,30 @@
+import sqlite3
+
+
+
+conn = sqlite3.connect('Eurovision Database.db')
+conn.row_factory = sqlite3.Row
+cursor = conn.cursor()
+
+#SELECT
+cursor.execute("SELECT ew.country,ew.song_name,sd.song_length_seconds "
+               "FROM song_details sd "
+               "JOIN eurovision_winners ew on sd.'Year' = ew.'Year' "
+               "WHERE sd.song_length_seconds >"
+               "(	SELECT avg(song_length_seconds) avg	FROM song_details)") # send query
+result = cursor.fetchall() # gets a list of generators
+list_results = [tuple(row) for row in result] # generate result
+for row in list_results:
+    print(row)
+
+# convert tuple to list
+list_data = [list(tup) for tup in list_results]
+print(list_data)
+
+# UPDATE
+cursor.execute("""UPDATE song_details
+    SET song_length_seconds = 180
+    WHERE year = 2018""")
+cursor.connection.commit() # saves the data into the file -- write changes
+
+conn.close()
